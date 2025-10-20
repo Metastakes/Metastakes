@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output
+
+# Production builds
+dist/
+build/
+.next/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database
+*.db
+*.sqlite
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Docker
+docker-compose.override.yml
+
+# PHI/PII (extra safety)
+**/phi-data/
+**/test-patient-data/
+
+# Service account keys (NEVER commit)
+**/service-account-*.json
+**/gcp-credentials-*.json
