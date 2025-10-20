@@ -96,7 +96,7 @@ export class GamificationService {
       [userId]
     );
 
-    return result.rows.map((row) => this.mapToUserBadge(row));
+    return result.rows.map((row: any) => this.mapToUserBadge(row));
   }
 
   /**

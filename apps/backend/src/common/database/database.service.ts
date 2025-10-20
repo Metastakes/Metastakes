@@ -4,7 +4,7 @@
  */
 
 import { Injectable, Inject, Logger, OnModuleDestroy } from '@nestjs/common';
-import { Pool, QueryResult } from 'pg';
+import { Pool, QueryResult, QueryResultRow } from 'pg';
 import { PG_CONNECTION } from './database.module';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class DatabaseService implements OnModuleDestroy {
   /**
    * Execute a query with parameterized values (SQL injection protection)
    */
-  async query<T = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
+  async query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
     const start = Date.now();
     try {
       const result = await this.pool.query<T>(text, params);
@@ -56,7 +56,7 @@ export class DatabaseService implements OnModuleDestroy {
   /**
    * Find one record
    */
-  async findOne<T>(table: string, where: Record<string, any>): Promise<T | null> {
+  async findOne<T extends QueryResultRow = any>(table: string, where: Record<string, any>): Promise<T | null> {
     const keys = Object.keys(where);
     const values = Object.values(where);
     const conditions = keys.map((key, i) => `${key} = $${i + 1}`).join(' AND ');
@@ -70,7 +70,7 @@ export class DatabaseService implements OnModuleDestroy {
   /**
    * Find many records
    */
-  async findMany<T>(
+  async findMany<T extends QueryResultRow = any>(
     table: string,
     where?: Record<string, any>,
     options?: {
@@ -109,7 +109,7 @@ export class DatabaseService implements OnModuleDestroy {
   /**
    * Create a record
    */
-  async create<T>(table: string, data: Record<string, any>): Promise<T> {
+  async create<T extends QueryResultRow = any>(table: string, data: Record<string, any>): Promise<T> {
     const keys = Object.keys(data);
     const values = Object.values(data);
     const placeholders = keys.map((_, i) => `$${i + 1}`).join(', ');
@@ -127,7 +127,7 @@ export class DatabaseService implements OnModuleDestroy {
   /**
    * Update a record
    */
-  async update<T>(
+  async update<T extends QueryResultRow = any>(
     table: string,
     where: Record<string, any>,
     data: Record<string, any>

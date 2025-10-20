@@ -20,8 +20,8 @@ export class PDMPService {
     private readonly db: DatabaseService,
     private readonly configService: ConfigService
   ) {
-    this.pdmpApiUrl = this.configService.get<string>('PDMP_API_URL');
-    this.pdmpApiKey = this.configService.get<string>('PDMP_API_KEY');
+    this.pdmpApiUrl = this.configService.get<string>('PDMP_API_URL') || '';
+    this.pdmpApiKey = this.configService.get<string>('PDMP_API_KEY') || '';
   }
 
   /**

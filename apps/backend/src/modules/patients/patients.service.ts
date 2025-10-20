@@ -201,6 +201,7 @@ export class PatientsService {
 
       // Create point transaction
       const patient = await this.findById(patientId);
+      if (!patient) throw new Error('Patient not found');
       await client.query(
         `INSERT INTO point_transactions (user_id, points, reason)
          VALUES ($1, $2, $3)`,
@@ -216,6 +217,7 @@ export class PatientsService {
    */
   async updateStreak(patientId: string): Promise<void> {
     const patient = await this.findById(patientId);
+    if (!patient) throw new Error('Patient not found');
 
     const newStreakDays = patient.currentStreakDays + 1;
     const longestStreak = Math.max(newStreakDays, patient.longestStreakDays);

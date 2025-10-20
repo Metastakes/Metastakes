@@ -24,6 +24,7 @@ export class ProvidersController {
   @Roles(UserRole.PROVIDER, UserRole.MENTOR)
   async updateMyProfile(@CurrentUser() user: any, @Body() data: any) {
     const provider = await this.providersService.findByUserId(user.sub);
+    if (!provider) throw new Error('Provider not found');
     return this.providersService.update(provider.id, data);
   }
 

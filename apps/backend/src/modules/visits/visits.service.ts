@@ -93,7 +93,9 @@ export class VisitsService {
     }
 
     if (fields.length === 0) {
-      return this.findById(id);
+      const existing = await this.findById(id);
+      if (!existing) throw new Error('Visit not found');
+      return existing;
     }
 
     values.push(id);
@@ -107,6 +109,7 @@ export class VisitsService {
 
   async complete(id: string): Promise<Visit> {
     const visit = await this.findById(id);
+    if (!visit) throw new Error('Visit not found');
     const now = new Date();
     const totalMinutes = visit.actualStart
       ? Math.round((now.getTime() - new Date(visit.actualStart).getTime()) / 60000)

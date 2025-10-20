@@ -52,7 +52,7 @@ export class AuditInterceptor implements NestInterceptor {
             // this.auditService.log({ ...requestLog, duration, status: 'success' });
           }
         },
-        error: (error) => {
+        error: (error: any) => {
           const duration = Date.now() - startTime;
           this.logger.error(
             `${method} ${url} - ${user?.email || 'anonymous'} - ${duration}ms - ERROR: ${

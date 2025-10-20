@@ -24,7 +24,7 @@ export interface APIResponse<T> {
 export class TransformInterceptor<T> implements NestInterceptor<T, APIResponse<T>> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<APIResponse<T>> {
     return next.handle().pipe(
-      map((data) => ({
+      map((data: T) => ({
         success: true,
         data,
         meta: {

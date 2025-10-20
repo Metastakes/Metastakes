@@ -67,9 +67,10 @@ export class AuthService {
     }
 
     // Check if account is locked
-    if (user.locked_until && new Date(user.locked_until) > new Date()) {
+    const userAny = user as any;
+    if (userAny.locked_until && new Date(userAny.locked_until) > new Date()) {
       const minutesLeft = Math.ceil(
-        (new Date(user.locked_until).getTime() - Date.now()) / 1000 / 60
+        (new Date(userAny.locked_until).getTime() - Date.now()) / 1000 / 60
       );
       throw new UnauthorizedException(
         `Account locked. Try again in ${minutesLeft} minutes.`
@@ -77,14 +78,14 @@ export class AuthService {
     }
 
     // Verify password
-    const isPasswordValid = await this.verifyPassword(password, user.password_hash);
+    const isPasswordValid = await this.verifyPassword(password, userAny.password_hash);
     if (!isPasswordValid) {
       await this.handleFailedLogin(user.id);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     // Check 2FA if enabled
-    if (user.two_factor_enabled) {
+    if (user.twoFactorEnabled) {
       if (!twoFactorCode) {
         throw new UnauthorizedException('Two-factor authentication code required');
       }
@@ -127,7 +128,7 @@ export class AuthService {
 
       // Get user
       const user = await this.usersService.findById(payload.sub);
-      if (!user || !user.is_active) {
+      if (!user || !user.isActive) {
         throw new UnauthorizedException('User not found or inactive');
       }
 
@@ -181,7 +182,7 @@ export class AuthService {
   async validateUser(payload: JWTPayload): Promise<User> {
     const user = await this.usersService.findById(payload.sub);
 
-    if (!user || !user.is_active) {
+    if (!user || !user.isActive) {
       throw new UnauthorizedException('User not found or inactive');
     }
 
@@ -256,8 +257,10 @@ export class AuthService {
    */
   private async handleFailedLogin(userId: string): Promise<void> {
     const user = await this.usersService.findById(userId);
+    if (!user) return;
 
-    const failedAttempts = (user.failed_login_attempts || 0) + 1;
+    const userAny = user as any;
+    const failedAttempts = (userAny.failed_login_attempts || 0) + 1;
     const maxAttempts = 5;
 
     if (failedAttempts >= maxAttempts) {

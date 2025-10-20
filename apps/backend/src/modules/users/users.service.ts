@@ -47,12 +47,12 @@ export class UsersService {
       RETURNING *`,
       [
         data.email,
-        data.password_hash,
+        (data as any).password_hash,
         data.role,
-        data.is_active ?? true,
-        data.is_email_verified ?? false,
-        data.two_factor_enabled ?? false,
-        data.preferred_locale ?? 'en',
+        data.isActive ?? true,
+        data.isEmailVerified ?? false,
+        data.twoFactorEnabled ?? false,
+        data.preferredLocale ?? 'en',
       ]
     );
 
@@ -116,10 +116,7 @@ export class UsersService {
       lastLoginAt: row.last_login_at,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
-      password_hash: row.password_hash, // Include for auth, but never expose in API
-      failed_login_attempts: row.failed_login_attempts,
-      locked_until: row.locked_until,
-    };
+    } as any; // Include extra fields for auth (password_hash, etc.) but never expose in API
   }
 
   /**
