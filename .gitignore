@@ -56,7 +56,9 @@ htmlcov/
 *.sqlite3
 
 # PHI/Sensitive (NEVER commit)
-*.env*
+.env
+.env.*
+!.env.example
 credentials.json
 secrets/
 pdmp_reports/
