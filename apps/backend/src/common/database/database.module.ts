@@ -4,32 +4,28 @@
  */
 
 import { Module, Global } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import { DatabaseService } from './database.service';
-
-export const PG_CONNECTION = 'PG_CONNECTION';
+import { PG_CONNECTION } from './database.constants';
 
 @Global()
 @Module({
-  imports: [ConfigModule],
   providers: [
     {
       provide: PG_CONNECTION,
-      useFactory: (configService: ConfigService) => {
+      useFactory: () => {
         return new Pool({
-          connectionString: configService.get<string>('DATABASE_URL'),
+          connectionString: process.env.DATABASE_URL,
           ssl:
-            configService.get<string>('DATABASE_SSL_MODE') === 'require'
+            process.env.DATABASE_SSL_MODE === 'require'
               ? { rejectUnauthorized: false }
               : false,
-          min: configService.get<number>('DATABASE_POOL_MIN', 2),
-          max: configService.get<number>('DATABASE_POOL_MAX', 10),
+          min: parseInt(process.env.DATABASE_POOL_MIN || '2', 10),
+          max: parseInt(process.env.DATABASE_POOL_MAX || '10', 10),
           idleTimeoutMillis: 30000,
           connectionTimeoutMillis: 10000,
         });
       },
-      inject: [ConfigService],
     },
     DatabaseService,
   ],

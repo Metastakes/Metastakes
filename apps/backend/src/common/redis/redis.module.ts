@@ -4,21 +4,18 @@
  */
 
 import { Module, Global } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { RedisService } from './redis.service';
-
-export const REDIS_CLIENT = 'REDIS_CLIENT';
+import { REDIS_CLIENT } from './redis.constants';
 
 @Global()
 @Module({
-  imports: [ConfigModule],
   providers: [
     {
       provide: REDIS_CLIENT,
-      useFactory: (configService: ConfigService) => {
-        const redisUrl = configService.get<string>('REDIS_URL', 'redis://localhost:6379');
-        const tlsEnabled = configService.get<boolean>('REDIS_TLS_ENABLED', false);
+      useFactory: () => {
+        const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+        const tlsEnabled = process.env.REDIS_TLS_ENABLED === 'true';
 
         return new Redis(redisUrl, {
           maxRetriesPerRequest: 3,
@@ -35,7 +32,6 @@ export const REDIS_CLIENT = 'REDIS_CLIENT';
           }),
         });
       },
-      inject: [ConfigService],
     },
     RedisService,
   ],

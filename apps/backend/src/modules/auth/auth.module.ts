@@ -12,6 +12,8 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { UsersModule } from '../users/users.module';
+import { PatientsModule } from '../patients/patients.module';
+import { ProvidersModule } from '../providers/providers.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { UsersModule } from '../users/users.module';
       }),
     }),
     UsersModule,
+    PatientsModule,
+    ProvidersModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, GoogleStrategy],

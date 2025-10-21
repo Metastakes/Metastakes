@@ -12,10 +12,10 @@ import { ConfigService } from '@nestjs/config';
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(private readonly configService: ConfigService) {
     super({
-      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
-      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configService.get<string>('GOOGLE_OAUTH_REDIRECT_URI'),
-      scope: configService.get<string>('GOOGLE_OAUTH_SCOPES', 'calendar.readonly,calendar.events').split(','),
+      clientID: configService.get<string>('GOOGLE_CLIENT_ID') || 'placeholder_client_id',
+      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || 'placeholder_client_secret',
+      callbackURL: configService.get<string>('GOOGLE_OAUTH_REDIRECT_URI') || 'http://localhost:3100/auth/google/callback',
+      scope: (configService.get<string>('GOOGLE_OAUTH_SCOPES') || 'openid,email,profile,calendar.readonly,calendar.events').split(','),
     });
   }
 
