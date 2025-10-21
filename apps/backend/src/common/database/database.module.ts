@@ -4,7 +4,7 @@
  */
 
 import { Module, Global } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import { DatabaseService } from './database.service';
 
@@ -12,6 +12,7 @@ export const PG_CONNECTION = 'PG_CONNECTION';
 
 @Global()
 @Module({
+  imports: [ConfigModule],
   providers: [
     {
       provide: PG_CONNECTION,
